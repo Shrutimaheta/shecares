@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+
+    function currentUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuth() && currentUser().role in ['admin', 'super_admin'];
+    }
+
+    function isSuperAdmin() {
+      return isAuth() && currentUser().role == 'super_admin';
+    }
+
+    function validUserCreate(uid) {
+      return request.resource.data.uid == uid &&
+        request.resource.data.role == 'customer' &&
+        request.resource.data.phone is string;
+    }
+
+    function ownerProfileUpdateOnly() {
+      return request.resource.data.uid == resource.data.uid &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    function validOrderCreate() {
+      return request.resource.data.userId == request.auth.uid &&
+        request.resource.data.items is list &&
+        request.resource.data.items.size() > 0 &&
+        request.resource.data.address is map;
+    }
+
+    function validOperationalOrderUpdate() {
+      return request.resource.data.userId == resource.data.userId &&
+        request.resource.data.items == resource.data.items &&
+        request.resource.data.address == resource.data.address &&
+        request.resource.data.subtotal == resource.data.subtotal &&
+        request.resource.data.deliveryFee == resource.data.deliveryFee &&
+        request.resource.data.emergencyFee == resource.data.emergencyFee &&
+        request.resource.data.totalAmount == resource.data.totalAmount;
+    }
+
+    match /users/{uid} {
+      allow create: if isOwner(uid) && validUserCreate(uid);
+      allow read: if isOwner(uid) || isAdmin();
+      allow update: if (isOwner(uid) && ownerProfileUpdateOnly()) || isAdmin();
+      allow delete: if isSuperAdmin();
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAuth();
+    }
+
+    match /orders/{orderId} {
+      allow create: if isAuth() && validOrderCreate();
+      allow read: if isAuth() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin() ||
+        currentUser().role == 'agent'
+      );
+      allow update: if isAuth() && (
+        isAdmin() || currentUser().role == 'agent'
+      ) && validOperationalOrderUpdate();
+      allow delete: if isAdmin();
+    }
+
+    match /carts/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    match /agents/{agentId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    match /ngo_partners/{ngoId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    match /site_settings/{settingId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+  }
+}
+

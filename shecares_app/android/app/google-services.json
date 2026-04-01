@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "836285276754",
+    "project_id": "shecares-c000d",
+    "storage_bucket": "shecares-c000d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836285276754:android:bd697927522393b223f58b",
+        "android_client_info": {
+          "package_name": "com.example.shecares_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4amSu0YgJ2yIK45CO9l6UA_Zo8bH92Z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836285276754:android:e2505e915329671323f58b",
+        "android_client_info": {
+          "package_name": "com.shecares.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4amSu0YgJ2yIK45CO9l6UA_Zo8bH92Z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

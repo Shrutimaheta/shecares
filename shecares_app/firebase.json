@@ -1,0 +1,29 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "shecares-c000d",
+          "appId": "1:836285276754:android:bd697927522393b223f58b",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "shecares-c000d",
+          "configurations": {
+            "android": "1:836285276754:android:bd697927522393b223f58b",
+            "ios": "1:836285276754:ios:3b99f30a543d4e5923f58b",
+            "web": "1:836285276754:web:753c0f788c5c1e0923f58b"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}
